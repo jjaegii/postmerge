@@ -1,13 +1,9 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import tensorflow as tf
 import os
-from PIL import Image
-from keras.utils import to_categorical
 from tensorflow import keras
-from keras import layers
+from keras.utils import to_categorical
+from PIL import Image
+from module.cnn_model import build_model
 
 
 def run():
@@ -71,18 +67,7 @@ def run():
     X_train = X_train.reshape(-1, 28, 28, 1)  # color면 1->3
     X_test = X_test.reshape(-1, 28, 28, 1)
 
-    model = keras.Sequential([
-        # 특징 추출
-        layers.Conv2D(filters=32, kernel_size=(3, 3),
-                      activation='relu', input_shape=(28, 28, 1)),
-        layers.MaxPool2D(pool_size=(2, 2)),
-        layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
-        layers.MaxPool2D(pool_size=(2, 2)),
-        layers.Flatten(),
-        # 분류기
-        layers.Dense(units=32, activation='relu'),
-        layers.Dense(units=10, activation='softmax')
-    ])
+    model = build_model()
 
     model.compile(
         optimizer='adam',
@@ -93,7 +78,7 @@ def run():
     EPOCHS = 100
     BATCH_SIZE = 256
 
-    history = model.fit(
+    model.fit(
         X_train, y_train_o,
         epochs=EPOCHS, batch_size=BATCH_SIZE,
         validation_data=(X_test, y_test_o),
