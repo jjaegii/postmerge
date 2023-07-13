@@ -5,6 +5,12 @@ from tensorflow import keras
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
 
+MODEL_PATH = os.environ.get('MODEL_PATH')
+print(MODEL_PATH)
+if MODEL_PATH is None:
+    print('MODEL_PATH is not set')
+    MODEL_PATH = 'model/mnist.h5'
+
 app = Flask(__name__)
 
 
@@ -14,7 +20,7 @@ def index():
 
 
 def load_model():
-    return keras.models.load_model('model/mnist.h5')
+    return keras.models.load_model(MODEL_PATH)
 
 
 def transform(img_path):
